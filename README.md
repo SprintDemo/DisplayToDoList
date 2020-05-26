@@ -1,2 +1,0 @@
-# DisplayToDoList
-Created with CodeSandbox
