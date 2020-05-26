@@ -5,12 +5,12 @@ import Todos from "./components/Todos";
 import Header from "./components/layout/Header";
 import AddTodo from "./components/AddTodo";
 import About from "./components/pages/About";
-import uuid from "uuid";
+import Axios from "axios";
 
 class App extends React.Component {
   state = {
     todos: [
-      {
+      /* {
         id: 1,
         title: "Take it to Trash",
         completed: false
@@ -24,9 +24,15 @@ class App extends React.Component {
         id: 3,
         title: "Take it to Trash2",
         completed: false
-      }
+      } */
     ]
   };
+
+  componentDidMount() {
+    Axios.get("https://jsonplaceholder.typicode.com/todos/?_limit=10").then(
+      res => this.setState({ todos: res.data })
+    );
+  }
 
   markComplete = id => {
     console.log("from App" + id);
@@ -42,19 +48,27 @@ class App extends React.Component {
 
   deleteRow = id => {
     console.log("In deleteRow");
-    this.setState({
-      todos: [...this.state.todos.filter(todo => todo.id !== id)]
-    });
+    Axios.delete("https://jsonplaceholder.typicode.com/todos/$(id)").then(res =>
+      this.setState({
+        todos: [...this.state.todos.filter(todo => todo.id !== id)]
+      })
+    );
   };
 
   addTodo = title => {
-    console.log(this.state.todos.length);
+    /*  console.log(this.state.todos.length);
     const todoItem = {
       id: this.state.todos.length + 1,
       title: title,
       completed: false
+    }; */
+    const todoItem = {
+      title: title,
+      completed: false
     };
-    this.setState({ todos: [...this.state.todos, todoItem] });
+    Axios.post("https://jsonplaceholder.typicode.com/todos/", todoItem).then(
+      res => this.setState({ todos: [...this.state.todos, res.data] })
+    );
   };
   render() {
     //console.log(this.state.todos);
